@@ -45,6 +45,16 @@ display(df)
 
 # COMMAND ----------
 
+tmp_df = df.toPandas()
+ax = tmp_df['action'].hist(bins=3, grid=False, figsize=(12,8), color='#86bf91', width=0.6)
+
+ax.set_xlabel('Action')
+ax.set_ylabel('Count')
+ax.set_title('Distribution by Action')
+
+
+# COMMAND ----------
+
 # How many unique customers visited the website?
 n_views = df.filter(df.action == 'view')
 n_views_distinct = n_views.dropDuplicates(['customer_id']).select('customer_id')
@@ -65,6 +75,14 @@ total_amount.show(5)
 
 revenue = total_amount.groupBy('product_id').sum('amount').withColumnRenamed('sum(amount)', 'total_sale').sort('product_id')
 revenue.show()
+
+# COMMAND ----------
+
+revenue_pd = revenue.toPandas()
+ax = revenue_pd.plot.bar(x='product_id', y='total_sale', figsize=(10,16), color='#86bf91')
+ax.set_xlabel('Product Id')
+ax.set_ylabel('Sales')
+ax.set_title('Sales by Product')
 
 # COMMAND ----------
 
@@ -89,3 +107,11 @@ customer_group.show(5)
 top_10_customer = customer_group.sort(customer_group.total_purchase.desc())
 print("The Top 10 customers with highest spending are: ")
 top_10_customer.show(10)
+
+# COMMAND ----------
+
+customer_pd = top_10_customer.limit(10).toPandas()
+ax = customer_pd.plot.bar(x='customer_id', y='total_purchase', figsize=(10,16), color='#86bf91')
+ax.set_xlabel('Customer Id')
+ax.set_ylabel('Purchase')
+ax.set_title('Purchases by Customers')
