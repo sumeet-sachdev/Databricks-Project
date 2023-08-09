@@ -76,7 +76,3 @@ web_logs_tmp.show()
 # (product_df.product_id == web_logs_tmp.product_id).show()
 
 product_df.join(web_logs_tmp,product_df.product_id == web_logs_tmp.product_id,"inner")
-
-# COMMAND ----------
-
-
