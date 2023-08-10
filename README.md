@@ -1,4 +1,4 @@
-# TechCo Data Preparation and analysis
+# TechCo Data Preparation and Analysis
 
 ## Requirements
 - Resource Group
@@ -8,9 +8,20 @@
 - PySpark and SQL
 
 ## Execution
-
+The code has been organized into notebooks. Each notebook can be executed individually and is independent from the other one. To execute the project, execute all the notebooks in order. 
 
 ## File Structure
+Repo:
+- 2ab. Transformation
+    In this notebook, we mount the storage account and load all the files. To load the storage account, we used key vaults instead of hard-coding access keys. There were some minor inconsistencies, which were resolved after loading. 
+
+- 2c. Join Tables
+    In this notebook, all the tables were joined and stored to the same storage account. The joined tables are further used for exploratory data analysis and visualization.
+
+- 3. Data Analysis and Viz.
+    In this notebook, full data was loaded from the storage account and analyzed. This notebook also includes some graphs and plots.
+
+- Readme.md
 
 ## Process Steps
 
@@ -40,8 +51,16 @@ The data from all sources is ingested into Spark Dataframes in Python, for Trans
 
 2.3. Create a Denormalized store having each log with the relevant customer's and product's details
 
-### 3. Data Analysis
+### 3. Data Analysis and Visualization
 
-### 4. Data Visualization
+3.1. Comparing the Frequency of actions performed
 
-### 5. Sumeet Sachdev's Views (MVP)
+3.2. Finding the number of unique customers
+
+3.3. Comparing revenues per product category
+
+3.4. Finding the total sales across all activity
+
+3.5. Comparing revenues per product
+
+3.6. Comparing the total spend per customer
