@@ -1,5 +1,9 @@
 # TechCo Data Preparation and Analysis
 
+## Architecture Diagram
+
+![Architecture Diagram](project_architecture.png)
+
 ## Requirements
 - Resource Group
 - Storage Account
