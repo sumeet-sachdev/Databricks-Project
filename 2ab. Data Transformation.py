@@ -74,10 +74,13 @@ customer_table = customer_df.createOrReplaceTempView('Customer')
 
 # COMMAND ----------
 
+# Query to view intermediete result
+# Getting all products-logs which denote a purchase
 spark.sql("SELECT * FROM Products p join Logs L on p.product_id = L.product_id where action = 'purchase' order by p.product_name").show()
 
 # COMMAND ----------
 
+# Calculate total sales for each product based on the order quantity and product price
 spark.sql("SELECT sum(price*quantity) as sales, p.product_id, p.product_name FROM Products p join Logs L on p.product_id = L.product_id where action = 'purchase' group by p.product_id, p.product_name").show()
 
 # COMMAND ----------
