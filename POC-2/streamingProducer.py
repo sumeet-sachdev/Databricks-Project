@@ -1,10 +1,11 @@
+import boto3
 import random
 from datetime import datetime, timedelta
 
 import json
 
 sqs = boto3.client('sqs')
-queue_url = ""
+queue_url = "https://sqs.ap-south-1.amazonaws.com/475184346033/streaming-logs-input"
 
 # Function to generate a random timestamp
 def random_timestamp(start, end):
@@ -33,8 +34,11 @@ def lambda_handler(event, context):
     # "Produce" to SQS
     response = sqs.send_message( # Send the message to the SQS queue
         QueueUrl=queue_url,
-        MessageBody=log_entry
+        MessageBody=str(log_entry)
     )
+    
+    # Logging
+    print(f'Produced Log #{log_entry["log_id"]}')
     
     return {
         'statusCode': 200,
