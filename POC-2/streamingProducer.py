@@ -34,7 +34,7 @@ def lambda_handler(event, context):
     # "Produce" to SQS
     response = sqs.send_message( # Send the message to the SQS queue
         QueueUrl=queue_url,
-        MessageBody=str(log_entry)
+        MessageBody=json.dumps(log_entry)
     )
     
     # Logging
