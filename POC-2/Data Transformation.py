@@ -5,9 +5,12 @@ secret_key = dbutils.secrets.get(scope = "aws-account", key = "aws-access-secret
 #Mount s3 Bucket on DataBricks
 encoded_secret_key = secret_key.replace("/", "%2F")
 aws_bucket_name = "bkt-poc2-redshift"
-mount_name_s3 = "groups3"
+mount_name_s3 = "s3"
 dbutils.fs.mount("s3a://%s:%s@%s" % (access_key, encoded_secret_key, aws_bucket_name), "/mnt/%s" % mount_name_s3)
-# display(dbutils.fs.ls("/mnt/%s" % mount_name_s3))
+
+# COMMAND ----------
+
+display(dbutils.fs.ls("/mnt/%s" % mount_name_s3))
 
 # COMMAND ----------
 
@@ -24,13 +27,13 @@ spark = SparkSession.builder.appName("TechCoECommerce").getOrCreate()
 # COMMAND ----------
 
 # Load web logs data
-web_logs_df = spark.read.option("multiline","true").json(f"/mnt/{mount_name_s3}/web_logs.json")
+web_logs_df = spark.read.csv(f"/mnt/{mount_name_s3}/web_logs.csv000", header=True, inferSchema=True)
 
 # Load customer data
-customer_df = spark.read.csv(f"/mnt/{mount_name_s3}/customer_data.csv", header=True, inferSchema=True)
+customer_df = spark.read.csv(f"/mnt/{mount_name_s3}/customer.csv000", header=True, inferSchema=True)
 
 # Load product data
-product_df = spark.read.csv(f"/mnt/{mount_name_s3}/product_data.csv", header=True, inferSchema=True)
+product_df = spark.read.csv(f"/mnt/{mount_name_s3}/product.csv000", header=True, inferSchema=True)
 
 # COMMAND ----------
 
@@ -72,7 +75,7 @@ spark.sql("SELECT sum(price*quantity) as sales, p.product_id, p.product_name FRO
 # COMMAND ----------
 
 # Comprehensive dataset for analysis
-full_data = spark.sql('SELECT L.log_id, L.timestamp, L.customer_id, L.product_id, L.action, L.quantity, p.product_name, p.category, p.price, c.first_name, c.last_name, c.email, c.phone FROM Products p join Logs L on p.product_id = L.product_id join Customer c  on L.customer_id = c.customer_id')
+full_data = spark.sql('SELECT L.log_id, L.tstamp, L.customer_id, L.product_id, L.action, L.quantity, p.product_name, p.category, p.price, c.first_name, c.last_name, c.email, c.phone FROM Products p join Logs L on p.product_id = L.product_id join Customer c on L.customer_id = c.customer_id')
 
 # COMMAND ----------
 
@@ -113,11 +116,14 @@ dbutils.fs.mount(source = source_url,
 (full_data
  .coalesce(1)
  .write
- .mode("append")
  .option("header", "true")
  .format("csv")
- .save(f"/mnt/{mount_name_sa}/full_data.csv"))
+ .save(f"dbfs:/mnt/{mount_name_sa}/full_data1/full_data.csv"))
 
 # COMMAND ----------
 
 dbutils.fs.ls(mount_point_url)
+
+# COMMAND ----------
+
+

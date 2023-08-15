@@ -40,7 +40,7 @@ spark = SparkSession.builder.appName("TechCoECommerce").getOrCreate()
 
 # COMMAND ----------
 
-df = spark.read.csv(f"/mnt/{mount_name}/full_data.csv", header=True, inferSchema=True)
+df = spark.read.csv(f"/mnt/{mount_name}/full_data/part-00000-tid-6264296624033889962-ce654dbb-4cbe-4805-a73d-9f7e72a3406e-268-1-c000.csv", header=True, inferSchema=True)
 display(df)
 
 # COMMAND ----------
@@ -49,7 +49,7 @@ tmp_df = df.toPandas()
 actions = tmp_df['action'].value_counts()
 colors = ['crimson', 'gold', 'lightseagreen']
 plt.figure(figsize=(8,6))
-plt.pie(actions, labels=actions.index, autopct='%1.2f%%', explode=[0.02]*3, colors=colors)
+plt.pie(actions, labels=actions.index, autopct='%1.2f%%', explode=[0.03]*3, colors=colors)
 plt.title('Distribution by Action')
 plt.show()
 
