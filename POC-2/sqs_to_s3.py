@@ -5,8 +5,9 @@ s3_client = boto3.client('s3', region_name='ap-south-1')
 
 # Defining SQS queue URL and S3 bucket name and object key for json file
 sqs_queue_url = "https://sqs.ap-south-1.amazonaws.com/475184346033/streaming-logs-input "
+consumer_queue_url = 'https://sqs.ap-south-1.amazonaws.com/475184346033/sqs-lambda-redshift'
 s3_bucket_name = "bkt-poc2-input"
-s3_object_key = 'collected_messages.json'  
+s3_object_key = 'stream_collected_messages.json'  
 
 def read_from_sqs_and_write_to_s3():
     collected_messages = []  # List to hold all the received messages
@@ -25,6 +26,10 @@ def read_from_sqs_and_write_to_s3():
                 try:
                     message_body = json.loads(message['Body'])
                     collected_messages.append(message_body)
+                    sqs_client.send_message(
+                        QueueUrl=consumer_queue_url,
+                        MessageBody=json.dumps(message_body)
+                    )
 
                     # Deleting the processed message from SQS
                     sqs_client.delete_message(
@@ -39,14 +44,16 @@ def read_from_sqs_and_write_to_s3():
             print("No messages received from SQS.")
 
         # Writing the collected messages to S3
-        if collected_messages:
+        if len(collected_messages)>50:
             try:
                 s3_client.put_object(
                     Bucket=s3_bucket_name,
                     Key=s3_object_key,
                     Body=json.dumps(collected_messages, indent=2)
                 )
+                collected_messages=[]
                 print(f"Collected messages written to {s3_object_key} in S3.")
+                print(f"Message {message['MessageId']} processed and sent to consumer Queue.")
             except Exception as e:
                 print(f"Error writing collected messages to S3: {str(e)}")
 
