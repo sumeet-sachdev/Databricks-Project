@@ -10,6 +10,7 @@ sqs_queue_url = "https://sqs.ap-south-1.amazonaws.com/475184346033/streaming-log
 consumer_queue_url = 'https://sqs.ap-south-1.amazonaws.com/475184346033/sqs-lambda-redshift'
 s3_bucket_name = "bkt-poc2-input"
  
+ #reading data from sqs and write to s3
 def read_from_sqs_and_write_to_s3():
     collected_messages = []  # List to hold all the received messages
     current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
