@@ -1,16 +1,39 @@
+import sys
+import getopt
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 
-# Define the paths to your CSV and Parquet files
-csv_file_path = "product_data.csv"
-parquet_file_path = "product_data.parquet"
+def convert_csv_to_parquet(csv_file_path, parquet_file_path):
+    # Read the CSV file into a pandas DataFrame
+    csv_df = pd.read_csv(csv_file_path)
 
-# Read the CSV file into a pandas DataFrame
-csv_df = pd.read_csv(csv_file_path)
+    # Write the pandas DataFrame to Parquet format
+    csv_df.to_parquet(parquet_file_path, index=False)
+    print('Conversion completed!')
 
-# Convert pandas DataFrame to Arrow Table
-table = pa.Table.from_pandas(csv_df)
+def main(argv):
+    inputfile = 'product_data.csv'
+    outputfile = 'product_data.parquet'
+    
+    try:
+        opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
+    except getopt.GetoptError:
+        print('test.py -i <inputfile> -o <outputfile>')
+        sys.exit(2)
+        
+    for opt, arg in opts:
+        if opt == '-h':
+            print('test.py -i <inputfile> -o <outputfile>')
+            sys.exit()
+        elif opt in ("-i", "--ifile"):
+            inputfile = arg
+        elif opt in ("-o", "--ofile"):
+            outputfile = arg
+            
+    print('Input file is', inputfile)
+    print('Output file is', outputfile)
+        
+    # Call the conversion function
+    convert_csv_to_parquet(inputfile, outputfile)
 
-# Write Arrow Table to Parquet file
-pq.write_table(table, parquet_file_path)
+if __name__ == "__main__":
+    main(sys.argv[1:])
