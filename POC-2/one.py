@@ -3,7 +3,7 @@ import json
 import datetime
 sqs_client = boto3.client('sqs', region_name='ap-south-1')
 s3_client = boto3.client('s3', region_name='ap-south-1')
-s3_object_key="stream_data_collection.json"
+s3_object_key="stream_data_collection"
 
 # Defining SQS queue URL and S3 bucket name and object key for json file
 sqs_queue_url = "https://sqs.ap-south-1.amazonaws.com/475184346033/streaming-logs-input "
@@ -47,7 +47,7 @@ def read_from_sqs_and_write_to_s3():
             print("No messages received from SQS.")
 
         # Writing the collected messages to S3
-        if len(collected_messages)>50:
+        if len(collected_messages)>2:
             try:
                 s3_client.put_object(
                     Bucket=s3_bucket_name,
