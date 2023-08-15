@@ -4,10 +4,13 @@ from configparser import ConfigParser
 config_object = ConfigParser()
 
 
-config_object["FILEINFO"] = {
+config_object["InputFile"] = {
     "Input File": "product_data.csv",
+
+}
+config_object["OutputFile"] = {
     "Output File": "product_data.parquet",
-    "Command": "python testing.py -i product_data.csv -o product_data.parquet"
+
 }
 
 

@@ -1,6 +1,15 @@
 import sys
 import getopt
 import pandas as pd
+from configparser import ConfigParser
+
+#Read config.ini file
+config_object = ConfigParser()
+config_object.read("config.ini")
+
+
+input_io = config_object["InputFile"]
+output_op = config_object["OutputFile"]
 
 def convert_csv_to_parquet(csv_file_path, parquet_file_path):
     # Read the CSV file into a pandas DataFrame
@@ -11,8 +20,8 @@ def convert_csv_to_parquet(csv_file_path, parquet_file_path):
     print('Conversion completed!')
 
 def main(argv):
-    inputfile = 'product_data.csv'
-    outputfile = 'product_data.parquet'
+    inputfile = input_io
+    outputfile = output_op
     
     try:
         opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
